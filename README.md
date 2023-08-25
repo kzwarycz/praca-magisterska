@@ -8,14 +8,16 @@ The experiment uses the following technologies:
 * Rust
 * WASM
 * Yew
-* webp
+* [image library](https://crates.io/crates/image)
 
 2. High-level stack
 * Javascript
 * React
 * Node
+* [sharp library](https://www.npmjs.com/package/sharp)
 
 3. High-level lean stack
 * Javascript
 * SolidJS
 * Bun
+* [sharp library](https://www.npmjs.com/package/sharp)
