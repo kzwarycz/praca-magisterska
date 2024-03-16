@@ -1,72 +1,40 @@
+mod card;
+mod gallery;
+
+use gallery::Gallery;
+use crate::card::CardProps;
 use yew::prelude::*;
-use serde::Deserialize;
-use anyhow::Error;
-use reqwasm::http::Request;
-use yew::ComponentLink;
 
-#[derive(Deserialize, Clone, Debug)]
-pub struct ImageData {
-    url: String,
-}
+pub struct App;
 
-pub struct ImageComponent {
-    images: Vec<ImageData>,
-    link: ComponentLink<Self>,
-}
-
-pub enum Msg {
-    ReceiveResponse(Result<Vec<ImageData>, Error>),
-}
-
-impl Component for ImageComponent {
-    type Message = Msg;
+impl Component for App {
+    type Message = ();
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
-        let request = Request::get("../../image_urls.json").send().unwrap();
-        let callback = ctx.link().callback(
-            move |response: reqwasm::http::Response<Result<Vec<ImageData>, Error>>| {
-                Msg::ReceiveResponse(response.json().unwrap())
-            },
-        );
-        request.fetch(callback);
-        
-        Self {
-            images: Vec::new(),
-            link: ctx.link().clone(),
-        }
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            Msg::ReceiveResponse(response) => {
-                match response {
-                    Ok(data) => {
-                        self.images = data;
-                    }
-                    Err(error) => {
-                        // Handle the error
-                        log::error!("error: {:?}", error);
-                    }
-                }
-            }
-        }
-        true
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <div class="image-grid">
-                { for self.images.iter().map(|image| html! {
-                    <div>
-                        <img src={image.url.clone()} alt="" />
-                    </div>
-                })}
-            </div>
+            <Gallery cards={
+                vec![
+                    CardProps {
+                        url: "https://placehold.co/600x400".to_string(),
+                        title: "Image 1".to_string(),
+                        description: "This is the first image".to_string(),
+                    },
+                    CardProps {
+                        url: "https://placehold.co/600x400".to_string(),
+                        title: "Image 2".to_string(),
+                        description: "This is the second image".to_string(),
+                    },
+                ]
+            } />
         }
     }
 }
 
 fn main() {
-    yew::start_app::<ImageComponent>();
+    yew::Renderer::<App>::new().render();
 }
