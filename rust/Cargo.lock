@@ -1162,11 +1162,8 @@ dependencies = [
  "log",
  "reqwasm",
  "serde",
- "serde-wasm-bindgen 0.1.0",
  "tailwind-yew",
  "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
  "yew",
 ]
 
@@ -1210,18 +1207,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "30e27d1e4fd7659406c492fd6cfaf2066ba8773de45ca75e855590f856dc34a9"
 dependencies = [
  "serde_derive",
-]
-
-[[package]]
-name = "serde-wasm-bindgen"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68dbea01a2be7a9061c111a938a324a6cabf970cc6aff40e856dab80ae443cea"
-dependencies = [
- "fnv",
- "js-sys",
- "serde",
- "wasm-bindgen",
 ]
 
 [[package]]
