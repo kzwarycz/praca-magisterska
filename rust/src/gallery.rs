@@ -11,7 +11,7 @@ pub fn gallery(props: &GalleryProps) -> Html {
     html! {
         <div class="gallery">
             { for props.cards.iter().map(|card_props| html! {
-                <Card url={card_props.url.clone()} title={card_props.title.clone()} description={card_props.description.clone()} />
+                <Card url={card_props.url.clone()} title={card_props.title.clone()} id={card_props.id.clone()} />
             }) }
         </div>
     }

@@ -1,37 +1,53 @@
 mod card;
 mod gallery;
 
-use gallery::Gallery;
 use crate::card::CardProps;
+use gallery::Gallery;
 use yew::prelude::*;
+use gloo_net::http::Request;
+use serde::Deserialize;
 
-pub struct App;
+#[derive(Deserialize, Debug, Clone)]
+pub struct ImageData {
+    pub id: String,
+    pub title: String,
+    pub url: String,
+}
 
-impl Component for App {
-    type Message = ();
-    type Properties = ();
-
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
+#[function_component(App)]
+fn app() -> Html {
+    let images = use_state(|| vec![]);
+    {
+        let images = images.clone();
+        use_effect_with((), move |_| {
+            let images = images.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                let fetched_images: Vec<ImageData> = Request::get("/static/image_data.json")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+                let card_props: Vec<CardProps> = fetched_images.into_iter().map(|img| CardProps {
+                    id: img.id,
+                    title: img.title,
+                    url: img.url,
+                }).collect();
+                images.set(card_props);
+            });
+            || ()
+        });
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
-        html! {
-            <Gallery cards={
-                vec![
-                    CardProps {
-                        url: "https://placehold.co/600x400".to_string(),
-                        title: "Image 1".to_string(),
-                        description: "This is the first image".to_string(),
-                    },
-                    CardProps {
-                        url: "https://placehold.co/600x400".to_string(),
-                        title: "Image 2".to_string(),
-                        description: "This is the second image".to_string(),
-                    },
-                ]
-            } />
-        }
+    html! {
+        <>
+            <h1>{ "Image Gallery" }</h1>
+            <div>
+                <h3>{"Images to view"}</h3>
+                <Gallery cards={(*images).clone()} />
+            </div>
+        </>
     }
 }
 
