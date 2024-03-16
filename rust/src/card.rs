@@ -33,7 +33,7 @@ pub fn card(props: &CardProps) -> Html {
             <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2">{ &props.title }</div>
                 <p class="text-gray-700 text-base">
-                    { &props.id }
+                    {"ID of this image is "} { &props.id }
                 </p>
             </div>
         </div>

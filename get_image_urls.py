@@ -14,7 +14,7 @@ def search_images_pixabay(api_key, search_term, count):
     search_results = response.json()
     return [
         {
-            "id": img["id"],
+            "id": str(img["id"]),
             "title": f"Image {index + 1}",
             "url": img["largeImageURL"]
         }
