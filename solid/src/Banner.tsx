@@ -1,4 +1,4 @@
-import { type Component, createSignal } from 'solid-js';
+import { type Component} from 'solid-js';
 
 const Banner: Component = () => {
   const scrollToGallery = () => {
