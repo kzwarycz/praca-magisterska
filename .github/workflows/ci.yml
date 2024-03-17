@@ -1,0 +1,73 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-and-test-react:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Install dependencies (React)
+      run: npm install
+      working-directory: ./react
+    - name: Build React app
+      run: npm run build
+      working-directory: ./react
+    - name: Measure build artifacts size (React)
+      run: du -sh ./react/build | cut -f1
+    - name: Install static server
+      run: npm install -g serve
+    - name: Serve React app
+      run: serve -s build -l 3000 &
+      working-directory: ./react
+    - name: Run Lighthouse CI (React)
+      run: npx lhci autorun --collect.url=http://localhost:3000 --upload.target=temporary-public-storage
+      working-directory: ./react
+
+  build-and-test-solid:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Bun
+      run: curl https://bun.sh/install | bash
+    - name: Install dependencies (Solid)
+      run: ~/.bun/bin/bun install
+      working-directory: ./solid
+    - name: Build Solid app
+      run: ~/.bun/bin/bun build
+      working-directory: ./solid
+    - name: Measure build artifacts size (Solid)
+      run: du -sh ./solid/dist | cut -f1
+    - name: Install static server
+      run: npm install -g serve
+    - name: Serve Solid app
+      run: serve -s dist -l 3000 &
+      working-directory: ./solid
+    - name: Run Lighthouse CI (Solid)
+      run: npx lhci autorun --collect.url=http://localhost:3000 --upload.target=temporary-public-storage
+      working-directory: ./solid
+
+  build-and-test-rust:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+    - name: Build Rust app
+      run: cargo build --release
+      working-directory: ./rust
+    - name: Install Trunk
+      run: cargo install trunk
+    - name: Serve Rust app
+      run: trunk serve --release &
+      working-directory: ./rust
+    - name: Run Lighthouse CI (Rust)
+      run: npx lhci autorun --collect.url=http://localhost:8080 --upload.target=temporary-public-storage
+      working-directory: ./rust
