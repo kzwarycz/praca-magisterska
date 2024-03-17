@@ -1,14 +1,15 @@
 mod card;
 mod gallery;
+mod banner;
+mod footer;
 
 use crate::card::CardProps;
 use gallery::Gallery;
+use banner::Banner;
+use footer::Footer;
 use yew::prelude::*;
 use gloo_net::http::Request;
 use serde::Deserialize;
-use wasm_logger;
-use log::{Level, info};
-use wasm_bindgen::prelude::*;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct ImageData {
@@ -28,7 +29,6 @@ fn app() -> Html {
                 match Request::get("/image_data.json").send().await {
                     Ok(response) => {
                         let text = response.text().await.unwrap_or_else(|_| "Failed to read response text".to_string());
-                        web_sys::console::log_1(&format!("Response text: {}", text).into());
                         match serde_json::from_str::<Vec<ImageData>>(&text) {
                             Ok(fetched_images) => {
                                 let card_props: Vec<CardProps> = fetched_images.into_iter().map(|img| CardProps {
@@ -38,10 +38,12 @@ fn app() -> Html {
                                 }).collect();
                                 images.set(card_props);
                             },
-                            Err(e) => web_sys::console::log_1(&format!("Failed to deserialize: {:?}", e).into()),
+                            Err(_e) => {
+                            },
                         }
                     },
-                    Err(e) => web_sys::console::log_1(&format!("Failed to fetch: {:?}", e).into()),
+                    Err(_e) => {
+                    },
                 }
             });
             || ()
@@ -50,17 +52,15 @@ fn app() -> Html {
 
     html! {
         <>
-            <h1>{ "Image Gallery" }</h1>
-            <div>
-                <h3>{"Images to view"}</h3>
-                <Gallery cards={(*images).clone()} />
-            </div>
+            <Banner />
+                <div>
+                    <Gallery cards={(*images).clone()} />
+                </div>
+            <Footer />
         </>
     }
 }
 
 fn main() {
-    wasm_logger::init(wasm_logger::Config::new(Level::Debug));
-    info!("Starting the Yew app");
     yew::Renderer::<App>::new().render();
 }
