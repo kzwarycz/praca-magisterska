@@ -1,24 +1,20 @@
 {
-  "name": "solid",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
-  },
+  "name": "solid-image-gallery",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "devDependencies": {
-    "esbuild": "^0.14.54",
-    "postcss": "^8.4.28",
-    "solid-start-node": "^0.3.7",
-    "vite": "^4.4.9"
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.28.6",
-    "@solidjs/router": "^0.8.3",
-    "solid-js": "^1.8.1",
-    "solid-start": "^0.3.7"
+    "solid-js": "^1.8.15",
+    "tailwindcss": "^3.4.1"
   },
-  "engines": {
-    "node": ">=18"
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.1.6",
+    "vite-plugin-solid": "^2.10.1"
   }
 }

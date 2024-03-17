@@ -14,7 +14,7 @@ The experiment uses the following technologies:
 
 - Javascript
 - [React](https://react.dev/)
-- [Node](https://nodejs.org/en)
+- [Node.js](https://nodejs.org/en)
 
 3. High-level lean stack
 
