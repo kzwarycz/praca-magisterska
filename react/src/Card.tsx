@@ -6,7 +6,7 @@ interface CardProps {
   url: string;
 }
 
-const Card: React.FC<CardProps> = ({ id, title, url }) => {
+const Card: React.FC<CardProps> = ({ title, url }) => {
   return (
     <a className="block">
       <img
