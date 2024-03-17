@@ -1,25 +1,35 @@
-import { useState } from 'react'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import Banner from './Banner';
+import Gallery from './Gallery';
+import Footer from './Footer';
 
-function App() {
-  const [count, setCount] = useState(0)
+interface ImageData {
+  id: string;
+  title: string;
+  url: string;
+}
+
+const App: React.FC = () => {
+  const [images, setImages] = useState<ImageData[]>([]);
+
+  useEffect(() => {
+    fetch('/image_data.json')
+      .then((response) => response.json())
+      .then((data: ImageData[]) => {
+        setImages(data);
+      })
+      .catch((error) => console.error('Failed to load image data', error));
+  }, []);
 
   return (
     <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <Banner />
+      <div>
+        <Gallery cards={images} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
