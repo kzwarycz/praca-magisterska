@@ -24,8 +24,13 @@ jobs:
       run: serve -s dist -l 3000 &
       working-directory: ./react
     - name: Run Lighthouse CI (React)
-      run: npx lhci autorun --collect.url=http://localhost:3000 --upload.target=temporary-public-storage
+      run: npx lhci autorun --collect.url=http://localhost:3000 --collect.settings.output=html --collect.settings.output=json --collect.settings.outputPath=/lighthouse-reports
       working-directory: ./react
+    - name: Upload Lighthouse reports as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: lighthouse-reports
+        path: ./react/lighthouse-reports
 
   # build-and-test-solid:
   #   runs-on: ubuntu-latest
