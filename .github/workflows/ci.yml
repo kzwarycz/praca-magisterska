@@ -37,7 +37,7 @@ jobs:
   #       name: image-data
   #       path: react/public/
   #   - name: Measure source file size (React)
-  #     run: du -sh ./react/dist | cut -f1
+  #     run: du -sh ./react/src | cut -f1
   #   - name: Install dependencies (React)
   #     run: npm install
   #     working-directory: ./react
@@ -77,8 +77,8 @@ jobs:
   #     run: |
   #       curl -fsSL https://bun.sh/install | bash
   #       echo "$HOME/.bun/bin" >> $GITHUB_PATH
-  #   - name: Measure source file size (React)
-  #     run: du -sh ./react/dist | cut -f1
+  #   - name: Measure source file size (Solid)
+  #     run: du -sh ./solid/src | cut -f1
   #   - name: Install dependencies (Solid)
   #     run: bun install
   #     working-directory: ./solid
@@ -120,13 +120,13 @@ jobs:
         toolchain: stable
         profile: minimal
         override: true
-    - name: Measure source file size (React)
-      run: du -sh ./react/dist | cut -f1
+    - name: Measure source file size (Rust)
+      run: du -sh ./rust/src | cut -f1
     - name: Build Rust app
       run: cargo build --release
       working-directory: ./rust
-    - name: Measure build artifacts size (Solid)
-      run: du -sh ./solid/dist | cut -f1
+    - name: Measure build artifacts size (Rust)
+      run: du -sh ./rust/dist | cut -f1
     - name: Install Trunk
       run: cargo install trunk
     - name: Serve Rust app
@@ -135,8 +135,8 @@ jobs:
     - name: Audit URLs using Lighthouse
       uses: treosh/lighthouse-ci-action@v11
       with:
-        urls: 'http://localhost:3003'
-    - name: Upload Lighthouse results (Solid)
+        urls: 'http://localhost:8080'
+    - name: Upload Lighthouse results (Rust)
       uses: actions/upload-artifact@v4
       with:
         name: lighthouse-results-rust-${{ github.run_id }}
