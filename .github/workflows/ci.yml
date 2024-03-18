@@ -2,7 +2,7 @@ name: App Testing CI
 on: [workflow_dispatch]
 
 jobs:
-  generate-and-propagate-image-seed-json:
+  generate-and-propagate-image-seed-json-10:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -21,9 +21,32 @@ jobs:
       with:
         name: image-data
         path: image_data.json
+    - name: Wait for API refresh
+      run: sleep 60
+
+  # generate-and-propagate-image-seed-json-100:
+  #   needs: generate-and-propagate-image-seed-json-10
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: '3.9'
+  #   - name: Install dependencies
+  #     run: pip install -r requirements.txt
+  #   - name: Run script to generate image data
+  #     run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term computer --count 100
+  #   - name: Verify get_image_urls.py output
+  #     run: cat get_image_urls.py
+  #   - name: Upload image_data.json as an artifact
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: image-data
+  #       path: image_data.json
 
   # build-and-test-react:
-  #   needs: generate-and-propagate-image-seed-json
+  #   needs: generate-and-propagate-image-seed-json-10
   #   runs-on: ubuntu-latest
   #   steps:
   #   - uses: actions/checkout@v4
@@ -64,7 +87,7 @@ jobs:
   #       path: .lighthouseci/
 
   # build-and-test-solid:
-  #   needs: generate-and-propagate-image-seed-json
+  #   needs: generate-and-propagate-image-seed-json-10
   #   runs-on: ubuntu-latest
   #   steps:
   #   - uses: actions/checkout@v4
@@ -106,7 +129,7 @@ jobs:
   
 
   build-and-test-rust:
-    needs: generate-and-propagate-image-seed-json
+    needs: generate-and-propagate-image-seed-json-10
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -121,6 +144,7 @@ jobs:
         toolchain: stable
         profile: minimal
         override: true
+        target: wasm32-unknown-unknown
     - name: Measure source file size (Rust)
       run: du -sh ./rust/src | cut -f1
     - name: Build Rust app
