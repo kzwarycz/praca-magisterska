@@ -16,6 +16,11 @@ jobs:
       run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term test --count 10
     - name: Verify get_image_urls.py output
       run: cat get_image_urls.py
+    - name: Upload image_data.json as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: image-data
+        path: image_data.json
 
   # build-and-test-react:
   #   needs: generate-and-propagate-image-seed-json
