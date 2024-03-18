@@ -17,42 +17,47 @@ jobs:
     - name: Verify get_image_urls.py output
       run: cat get_image_urls.py
     - name: Upload image_data.json as an artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: image-data
         path: image_data.json
 
-  # build-and-test-react:
-  #   needs: generate-and-propagate-image-seed-json
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Use Node.js
-  #     uses: actions/setup-node@v4
-  #     with:
-  #       node-version: '20'
-  #   - name: Measure source file size (React)
-  #     run: du -sh ./react/dist | cut -f1
-  #   - name: Install dependencies (React)
-  #     run: npm install
-  #     working-directory: ./react
-  #   - name: Build React app
-  #     run: npm run build
-  #     working-directory: ./react
-  #   - name: Measure build artifacts size (React)
-  #     run: du -sh ./react/dist | cut -f1
-  #   - name: Install static server and wait-on
-  #     run: npm install -g serve wait-on
-  #   - name: Serve React app and wait for it to be ready
-  #     run: |
-  #       serve -s dist -l 3002 --cors &
-  #       npx wait-on http://localhost:3002 -t 30000
-  #     working-directory: ./react
-  #   - name: Audit URLs using Lighthouse
-  #     uses: treosh/lighthouse-ci-action@v11
-  #     with:
-  #       urls: 'http://localhost:3002'
-  #       uploadArtifacts: true
+  build-and-test-react:
+    needs: generate-and-propagate-image-seed-json
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Download image_data.json artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: image-data
+        path: react/public/
+    - name: Measure source file size (React)
+      run: du -sh ./react/dist | cut -f1
+    - name: Install dependencies (React)
+      run: npm install
+      working-directory: ./react
+    - name: Build React app
+      run: npm run build
+      working-directory: ./react
+    - name: Measure build artifacts size (React)
+      run: du -sh ./react/dist | cut -f1
+    - name: Install static server and wait-on
+      run: npm install -g serve wait-on
+    - name: Serve React app and wait for it to be ready
+      run: |
+        serve -s dist -l 3002 --cors &
+        npx wait-on http://localhost:3002 -t 30000
+      working-directory: ./react
+    - name: Audit URLs using Lighthouse
+      uses: treosh/lighthouse-ci-action@v11
+      with:
+        urls: 'http://localhost:3002'
+        uploadArtifacts: true
 
   build-and-test-solid:
     needs: generate-and-propagate-image-seed-json
@@ -60,7 +65,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download image_data.json artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: image-data
         path: solid/public/
