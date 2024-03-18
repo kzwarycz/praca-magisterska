@@ -9,7 +9,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '20'
     - name: Install dependencies (React)
       run: npm install
       working-directory: ./react
@@ -18,19 +18,18 @@ jobs:
       working-directory: ./react
     - name: Measure build artifacts size (React)
       run: du -sh ./react/dist | cut -f1
-    - name: Install static server
-      run: npm install -g serve
-    - name: Serve React app
-      run: serve -s dist -l 3000 &
+    - name: Install static server and wait-on
+      run: npm install -g serve wait-on
+    - name: Serve React app and wait for it to be ready
+      run: |
+        serve -s dist -l 3003 &
+        npx wait-on http://localhost:3003 -t 30000
       working-directory: ./react
-    - name: Run Lighthouse CI (React)
-      run: npx lhci autorun --collect.url=http://localhost:3000 --collect.settings.output=html --collect.settings.output=json --collect.settings.outputPath=/lighthouse-reports
-      working-directory: ./react
-    - name: Upload Lighthouse reports as artifacts
-      uses: actions/upload-artifact@v3
+    - name: Audit URLs using Lighthouse
+      uses: treosh/lighthouse-ci-action@v10
       with:
-        name: lighthouse-reports
-        path: ./react/lighthouse-reports
+        urls: 'http://localhost:3003'
+
 
   # build-and-test-solid:
   #   runs-on: ubuntu-latest
