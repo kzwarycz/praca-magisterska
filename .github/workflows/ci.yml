@@ -10,6 +10,8 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
     - name: Run script to generate image data
       run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term computer --count 10
     - name: Copy image_data.json to project directories
