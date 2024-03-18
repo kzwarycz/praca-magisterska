@@ -9,7 +9,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.9'
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: Run script to generate image data
@@ -40,16 +40,16 @@ jobs:
     - name: Measure build artifacts size (React)
       run: du -sh ./react/dist | cut -f1
     - name: Install static server and wait-on
-      run: npm install -g serve wait-on
+      run: npm install -g wait-on
     - name: Serve React app and wait for it to be ready
       run: |
-        serve -s dist -l 3003 &
-        npx wait-on http://localhost:3003 -t 30000
+        nohup npm run dev &
+        npx wait-on http://localhost:5173 -t 30000
       working-directory: ./react
     - name: Audit URLs using Lighthouse
       uses: treosh/lighthouse-ci-action@v11
       with:
-        urls: 'http://localhost:3003'
+        urls: 'http://localhost:5173'
         uploadArtifacts: true
 
   # build-and-test-solid:
