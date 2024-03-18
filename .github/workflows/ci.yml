@@ -2,6 +2,23 @@ name: App Testing CI
 on: [workflow_dispatch]
 
 jobs:
+  generate-and-propagate-image-seed-json:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Run script to generate image data
+      run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term computer --count 10
+    - name: Copy image_data.json to project directories
+      run: |
+        cp image_data.json rust/public/
+        cp image_data.json react/public/
+        cp image_data.json solid/public/
+
+
   build-and-test-react:
     runs-on: ubuntu-latest
     steps:
