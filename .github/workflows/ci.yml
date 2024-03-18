@@ -24,6 +24,7 @@ jobs:
 
 
   build-and-test-react:
+    needs: generate-and-propagate-image-seed-json
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -42,10 +43,10 @@ jobs:
     - name: Measure build artifacts size (React)
       run: du -sh ./react/dist | cut -f1
     - name: Install static server and wait-on
-      run: npm install -g wait-on
+      run: npm install -g serve wait-on
     - name: Serve React app and wait for it to be ready
       run: |
-        nohup npm run dev &
+        serve -s dist -l &
         npx wait-on http://localhost:5173 -t 30000
       working-directory: ./react
     - name: Audit URLs using Lighthouse
