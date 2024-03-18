@@ -13,7 +13,9 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: Run script to generate image data
-      run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term computer --count 10
+      run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term test --count 10
+    - name: Verify get_image_urls.py output
+      run: cat get_image_urls.py
     - name: Copy image_data.json to project directories
       run: |
         cp image_data.json rust/public/
