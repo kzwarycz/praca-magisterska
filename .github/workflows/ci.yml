@@ -57,7 +57,11 @@ jobs:
       uses: treosh/lighthouse-ci-action@v11
       with:
         urls: 'http://localhost:3002'
-        uploadArtifacts: true
+    - name: Upload Lighthouse results (React)
+      uses: actions/upload-artifact@v4
+      with:
+        name: lighthouse-results-react-${{ github.run_id }}
+        path: .lighthouseci/
 
   build-and-test-solid:
     needs: generate-and-propagate-image-seed-json
@@ -94,7 +98,11 @@ jobs:
       uses: treosh/lighthouse-ci-action@v11
       with:
         urls: 'http://localhost:3003'
-        uploadArtifacts: true
+    - name: Upload Lighthouse results (Solid)
+      uses: actions/upload-artifact@v4
+      with:
+        name: lighthouse-results-solid-${{ github.run_id }}
+        path: .lighthouseci/
   
 
   # build-and-test-rust:
