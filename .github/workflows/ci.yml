@@ -54,7 +54,6 @@ jobs:
   #     with:
   #       urls: 'http://localhost:3002'
   #       uploadArtifacts: true
-  #       runs: 3
 
   build-and-test-solid:
     needs: generate-and-propagate-image-seed-json
@@ -87,7 +86,6 @@ jobs:
       with:
         urls: 'http://localhost:3003'
         uploadArtifacts: true
-        runs: 3
   
 
   # build-and-test-rust:
