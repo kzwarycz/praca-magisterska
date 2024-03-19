@@ -45,87 +45,83 @@ jobs:
   #       name: image-data
   #       path: image_data.json
 
-  # build-and-test-react:
-  #   needs: generate-and-propagate-image-seed-json-10
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Use Node.js
-  #     uses: actions/setup-node@v4
-  #     with:
-  #       node-version: '20'
-  #   - name: Download image_data.json artifact
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: image-data
-  #       path: react/public/
-  #   - name: Measure source file size (React)
-  #     run: du -sh ./react/src | cut -f1
-  #   - name: Install dependencies (React)
-  #     run: npm install
-  #     working-directory: ./react
-  #   - name: Build React app
-  #     run: npm run build
-  #     working-directory: ./react
-  #   - name: Measure build artifacts size (React)
-  #     run: du -sh ./react/dist | cut -f1
-  #   - name: Install static server and wait-on
-  #     run: npm install -g serve wait-on
-  #   - name: Serve React app and wait for it to be ready
-  #     run: |
-  #       serve -s dist -l 3002 --cors &
-  #       npx wait-on http://localhost:3002 -t 30000
-  #     working-directory: ./react
-  #   - name: Audit URLs using Lighthouse
-  #     uses: treosh/lighthouse-ci-action@v11
-  #     with:
-  #       urls: 'http://localhost:3002'
-  #   - name: Upload Lighthouse results (React)
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: lighthouse-results-react-${{ github.run_id }}
-  #       path: .lighthouseci/
+  build-and-test-react:
+    needs: generate-and-propagate-image-seed-json-10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Download image_data.json artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: image-data
+        path: react/public/
+    - name: Install dependencies (React)
+      run: npm install
+      working-directory: ./react
+    - name: Build React app
+      run: npm run build
+      working-directory: ./react
+    - name: Measure build artifacts size (React)
+      run: du -sh ./react/dist | cut -f1
+    - name: Install static server and wait-on
+      run: npm install -g serve wait-on
+    - name: Serve React app and wait for it to be ready
+      run: |
+        serve -s dist -l 3002 --cors &
+        npx wait-on http://localhost:3002 -t 30000
+      working-directory: ./react
+    - name: Audit URLs using Lighthouse
+      uses: treosh/lighthouse-ci-action@v11
+      with:
+        urls: 'http://localhost:3002'
+    - name: Upload Lighthouse results (React)
+      uses: actions/upload-artifact@v4
+      with:
+        name: lighthouse-results-react-10-${{ github.run_id }}
+        path: .lighthouseci/
 
-  # build-and-test-solid:
-  #   needs: generate-and-propagate-image-seed-json-10
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Download image_data.json artifact
-  #     uses: actions/download-artifact@v4
-  #     with:
-  #       name: image-data
-  #       path: solid/public/
-  #   - name: Install Bun
-  #     run: |
-  #       curl -fsSL https://bun.sh/install | bash
-  #       echo "$HOME/.bun/bin" >> $GITHUB_PATH
-  #   - name: Measure source file size (Solid)
-  #     run: du -sh ./solid/src | cut -f1
-  #   - name: Install dependencies (Solid)
-  #     run: bun install
-  #     working-directory: ./solid
-  #   - name: Build Solid app
-  #     run: bun run build
-  #     working-directory: ./solid
-  #   - name: Measure build artifacts size (Solid)
-  #     run: du -sh ./solid/dist | cut -f1
-  #   - name: Install static server and wait-on
-  #     run: npm install -g serve wait-on
-  #   - name: Serve Solid app and wait for it to be ready
-  #     run: |
-  #       serve -s dist -l 3003 --cors &
-  #       npx wait-on http://localhost:3003 -t 30000
-  #     working-directory: ./solid
-  #   - name: Audit URLs using Lighthouse
-  #     uses: treosh/lighthouse-ci-action@v11
-  #     with:
-  #       urls: 'http://localhost:3003'
-  #   - name: Upload Lighthouse results (Solid)
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: lighthouse-results-solid-${{ github.run_id }}
-  #       path: .lighthouseci/
+  build-and-test-solid:
+    needs: generate-and-propagate-image-seed-json-10
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download image_data.json artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: image-data
+        path: solid/public/
+    - name: Install Bun
+      run: |
+        curl -fsSL https://bun.sh/install | bash
+        echo "$HOME/.bun/bin" >> $GITHUB_PATH
+    - name: Install dependencies (Solid)
+      run: bun install
+      working-directory: ./solid
+    - name: Build Solid app
+      run: bun run build
+      working-directory: ./solid
+    - name: Measure build artifacts size (Solid)
+      run: du -sh ./solid/dist | cut -f1
+    - name: Install static server and wait-on
+      run: npm install -g serve wait-on
+    - name: Serve Solid app and wait for it to be ready
+      run: |
+        serve -s dist -l 3003 --cors &
+        npx wait-on http://localhost:3003 -t 30000
+      working-directory: ./solid
+    - name: Audit URLs using Lighthouse
+      uses: treosh/lighthouse-ci-action@v11
+      with:
+        urls: 'http://localhost:3003'
+    - name: Upload Lighthouse results (Solid)
+      uses: actions/upload-artifact@v4
+      with:
+        name: lighthouse-results-solid-10-${{ github.run_id }}
+        path: .lighthouseci/
   
 
   build-and-test-rust:
@@ -145,8 +141,6 @@ jobs:
         profile: minimal
         override: true
         target: wasm32-unknown-unknown
-    - name: Measure source file size (Rust)
-      run: du -sh ./rust/src | cut -f1
     - name: Build Rust app
       run: cargo build --release
       working-directory: ./rust
@@ -164,5 +158,5 @@ jobs:
     - name: Upload Lighthouse results (Rust)
       uses: actions/upload-artifact@v4
       with:
-        name: lighthouse-results-rust-${{ github.run_id }}
+        name: lighthouse-results-rust-10-${{ github.run_id }}
         path: .lighthouseci/
