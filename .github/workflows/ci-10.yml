@@ -1,4 +1,4 @@
-name: App Testing CI - 10 images
+name: App Testing CI - 100 images
 on: [workflow_dispatch]
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
     - name: Run script to generate image data
-      run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term test --count 10
+      run: python3 get_image_urls.py --api_key ${{ secrets.API_KEY }} --search_term computer --count 100
     - name: Verify get_image_urls.py output
       run: cat get_image_urls.py
     - name: Upload image_data.json as an artifact
@@ -60,7 +60,7 @@ jobs:
     - name: Upload Lighthouse results (React)
       uses: actions/upload-artifact@v4
       with:
-        name: lighthouse-results-react-10-${{ github.run_id }}
+        name: lighthouse-results-react-100-${{ github.run_id }}
         path: .lighthouseci/
 
   build-and-test-solid:
@@ -99,7 +99,7 @@ jobs:
     - name: Upload Lighthouse results (Solid)
       uses: actions/upload-artifact@v4
       with:
-        name: lighthouse-results-solid-10-${{ github.run_id }}
+        name: lighthouse-results-solid-100-${{ github.run_id }}
         path: .lighthouseci/
   
 
@@ -137,5 +137,5 @@ jobs:
     - name: Upload Lighthouse results (Rust)
       uses: actions/upload-artifact@v4
       with:
-        name: lighthouse-results-rust-10-${{ github.run_id }}
+        name: lighthouse-results-rust-100-${{ github.run_id }}
         path: .lighthouseci/
