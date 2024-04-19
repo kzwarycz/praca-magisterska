@@ -131,6 +131,8 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: "http://localhost:8080"
+      - name: Measure build artifacts size (Rust)
+        run: du -sh ./rust/dist | cut -f1
       - name: Upload Lighthouse results (Rust)
         uses: actions/upload-artifact@v4
         with:
